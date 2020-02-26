@@ -1,0 +1,44 @@
+<resources>
+    <dimen name="margin_8dp">8dp</dimen>
+    <dimen name="margin_16dp">16dp</dimen>
+    <dimen name="margin_32dp">32dp</dimen>
+
+    <dimen name="padding_16dp">16dp</dimen>
+
+    <dimen name="top_bar_height">180dp</dimen>
+    <dimen name="top_bar_land_height">80dp</dimen>
+
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="text_name_city">18sp</dimen>
+    <dimen name="text_rating_restaurant">10sp</dimen>
+    <dimen name="text_name_restaurant">18sp</dimen>
+    <dimen name="text_locality_restaurant">12sp</dimen>
+    <dimen name="progress_bar_height">36dp</dimen>
+    <dimen name="progress_bar_width">36dp</dimen>
+    <dimen name="progress_bar_elevation">8dp</dimen>
+    <dimen name="card_view_city_min_height">160dp</dimen>
+    <dimen name="card_view_restaurant_min_height">100dp</dimen>
+    <dimen name="image_view_thumb_restaurant_height">100dp</dimen>
+    <dimen name="image_view_thumb_restaurant_width">100dp</dimen>
+    <dimen name="image_view_city_height">140dp</dimen>
+    <dimen name="button_restaurants_width">140dp</dimen>
+    <dimen name="top_bar_restaurant_details_height">48dp</dimen>
+    <dimen name="text_action_bar_cities_title_size">18sp</dimen>
+    <dimen name="text_action_bar_cities_subtitle_size">14sp</dimen>
+    <dimen name="text_action_bar_city_name_size">16sp</dimen>
+    <dimen name="text_action_bar_restaurant_name_size">16sp</dimen>
+    <dimen name="image_view_restaurant_height">160dp</dimen>
+    <dimen name="land_contraint_action_bar_height">80dp</dimen>
+    <dimen name="text_view_review_rating">12sp</dimen>
+    <dimen name="text_view_review_user_name">14sp</dimen>
+    <dimen name="text_view_review_text">14sp</dimen>
+    <dimen name="text_view_date_description">12sp</dimen>
+    <dimen name="text_title_width">70dp</dimen>
+    <dimen name="text_view_title_reviews">18sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+
+    <dimen name="restaurant_review_profile_width_48dp">48dp</dimen>
+    <dimen name="restaurant_review_profile_height_48dp">48dp</dimen>
+
+</resources>

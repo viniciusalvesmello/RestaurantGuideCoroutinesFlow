@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/citiesFragment">
+
+    <fragment
+        android:id="@+id/citiesFragment"
+        android:name="io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.view.CitiesFragment"
+        android:label="CitiesFragment"
+        tools:layout="@layout/cities_fragment">
+
+        <action
+            android:id="@+id/restaurantsAction"
+            app:destination="@id/restaurantsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@+id/citiesFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/restaurantsFragment"
+        android:name="io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.RestaurantsFragment"
+        android:label="RestaurantsFragment"
+        tools:layout="@layout/fragment_restaurants">
+
+        <argument
+            android:name="cityId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+
+        <argument
+            android:name="cityName"
+            app:argType="string"
+            android:defaultValue=" "/>
+
+        <action
+            android:id="@+id/restaurantDetailsAction"
+            app:destination="@id/restaurantDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@+id/restaurantsFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/restaurantDetailsFragment"
+        android:name="io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.RestaurantDetailsFragment"
+        android:label="RestaurantDetailsFragment"
+        tools:layout="@layout/fragment_restaurant_details">
+
+        <argument
+            android:name="restaurantDetailsArg"
+            android:defaultValue="@null"
+            app:nullable="true"
+            app:argType="io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg"/>
+
+    </fragment>
+
+</navigation>

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Guia de Restaurantes</string>
+    <string name="city_name">Nome da Cidade</string>
+    <string name="rating">Avaliação</string>
+    <string name="locality">Localidade</string>
+    <string name="restaurants">Restaurantes</string>
+    <string name="restaurant_details">Detalhes do Restaurante</string>
+    <string name="next_restaurants">Próximos Restaurantes</string>
+    <string name="next">Próximos</string>
+    <string name="last">Anteriores</string>
+    <string name="restaurant_name">Restaurant Name</string>
+    <string name="best_restaurants_guide">Guia dos melhores Restaurantes</string>
+    <string name="select_your_favorite_city">Selecione sua cidade preferida</string>
+    <string name="all">Todos</string>
+    <string name="title_cuisines">Cozinhas:</string>
+    <string name="cuisines">Cozinhas</string>
+    <string name="title_phone_numbers">Telefone:</string>
+    <string name="phone_numbers">Telefone</string>
+    <string name="title_address">Endereço:</string>
+    <string name="address">Endereço</string>
+    <string name="uninformed">Não informado</string>
+    <string name="top_rated_estaurants">Os melhores restaurantes</string>
+    <string name="name_city_in">em</string>
+    <string name="name_city_made_for_you">, feito para você</string>
+    <string name="description_of_review_date">Descrição da data do review</string>
+    <string name="user_name">Nome do usuário</string>
+    <string name="text_review">Texto do review</string>
+    <string name="reviews">Avaliações</string>
+    <string name="name">Nome!</string>
+</resources>
