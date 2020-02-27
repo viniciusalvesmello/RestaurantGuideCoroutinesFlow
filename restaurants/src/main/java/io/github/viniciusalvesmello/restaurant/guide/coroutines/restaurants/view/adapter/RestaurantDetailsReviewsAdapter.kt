@@ -22,5 +22,4 @@ class RestaurantDetailsReviewsAdapter(
 
     override fun onBindViewHolder(holder: RestaurantDetailsReviewViewHolder, position: Int) =
         holder.bind(listRestaurantReviews[position])
-
 }

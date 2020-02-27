@@ -14,8 +14,6 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.mode
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.mapper.toRestaurantDetailsArg
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter.RestaurantsAdapter
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.listener.RestaurantListener
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.listener.RestaurantsPaginationListener
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.RestaurantsViewModel
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.observe
@@ -25,7 +23,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigatio
 import kotlinx.android.synthetic.main.fragment_restaurants.*
 import javax.inject.Inject
 
-class RestaurantsFragment : DaggerFragment(), RestaurantListener, RestaurantsPaginationListener {
+class RestaurantsFragment : DaggerFragment() {
 
     @Inject
     lateinit var appNavigation: AppNavigation
@@ -108,7 +106,13 @@ class RestaurantsFragment : DaggerFragment(), RestaurantListener, RestaurantsPag
     }
 
     private fun handleRestaurants(restaurants: List<Restaurant>) {
-        rvRestaurants.adapter = RestaurantsAdapter(restaurants, this, this)
+        rvRestaurants.adapter = RestaurantsAdapter(restaurants, { view, restaurant ->
+            onClickItemRecycleView(view, restaurant)
+        }, {
+            onClickLastPageFooterRecycleView()
+        }, {
+            onClickNextPageFooterRecycleView()
+        })
         rvRestaurants.layoutManager = LinearLayoutManager(context)
     }
 
@@ -156,18 +160,18 @@ class RestaurantsFragment : DaggerFragment(), RestaurantListener, RestaurantsPag
         return chip
     }
 
-    override fun onClickItemRecycleView(view: View, restaurant: Restaurant) {
+    private fun onClickItemRecycleView(view: View, restaurant: Restaurant) {
         appNavigation.navigateFromRestaurantToRestaurantDetails(
             view,
             restaurant.toRestaurantDetailsArg()
         )
     }
 
-    override fun onClickLastPageFooterRecycleView() {
+    private fun onClickLastPageFooterRecycleView() {
         viewModel.getRestaurantsLastPage()
     }
 
-    override fun onClickNextPageFooterRecycleView() {
+    private fun onClickNextPageFooterRecycleView() {
         viewModel.getRestaurantsNextPage()
     }
 
