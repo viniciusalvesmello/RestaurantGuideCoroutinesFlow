@@ -5,5 +5,5 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel
 import kotlinx.coroutines.flow.Flow
 
 interface CitiesRepository {
-    suspend fun getCities(): ResourceResponse<List<City>>
+    fun getCities(): ResourceResponse<List<City>>
 }

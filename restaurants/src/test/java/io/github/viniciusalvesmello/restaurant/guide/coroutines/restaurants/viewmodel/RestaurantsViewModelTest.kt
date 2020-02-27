@@ -9,10 +9,8 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.utils.buildResourceResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.ResourceResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.StateView
-import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,134 +39,112 @@ class RestaurantsViewModelTest {
 
     @Test
     fun whenGetCategoriesRestaurantsShouldReturnList() {
-        runBlocking {
-            mockGetCategoriesRestaurantsSuccess()
 
-            viewModel.getCategoriesRestaurants()
+        mockGetCategoriesRestaurantsSuccess()
 
-            delay(DELAY)
+        viewModel.getCategoriesRestaurants()
 
-            viewModel.viewState.apply {
-                showLoading.test().assertNotInvoked()
-                categories.test().assertValue(listCategoryRestaurants)
-                restaurants.test().assertNotInvoked()
-                restaurantReviews.test().assertNotInvoked()
-                showError.test().assertNotInvoked()
-            }
+        viewModel.viewState.apply {
+            showLoading.test().assertNotInvoked()
+            categories.test().assertValue(listCategoryRestaurants)
+            restaurants.test().assertNotInvoked()
+            restaurantReviews.test().assertNotInvoked()
+            showError.test().assertNotInvoked()
         }
     }
 
     @Test
     fun whenGetRestaurantsShouldReturnList() {
-        runBlocking {
-            mockGetRestaurantsSuccess()
 
-            viewModel.getRestaurants()
+        mockGetRestaurantsSuccess()
 
-            delay(DELAY)
+        viewModel.getRestaurants()
 
-            viewModel.viewState.apply {
-                showLoading.test().assertValue(false)
-                categories.test().assertNotInvoked()
-                restaurants.test().assertValue(listRestaurant)
-                restaurantReviews.test().assertNotInvoked()
-                showError.test().assertNotInvoked()
-            }
+        viewModel.viewState.apply {
+            showLoading.test().assertValue(false)
+            categories.test().assertNotInvoked()
+            restaurants.test().assertValue(listRestaurant)
+            restaurantReviews.test().assertNotInvoked()
+            showError.test().assertNotInvoked()
         }
     }
 
     @Test
     fun whenGetRestaurantsShouldReturnError() {
-        runBlocking {
-            mockGetRestaurantsError()
 
-            viewModel.getRestaurants()
+        mockGetRestaurantsError()
 
-            delay(DELAY)
+        viewModel.getRestaurants()
 
-            viewModel.viewState.apply {
-                showLoading.test().assertValue(false)
-                categories.test().assertNotInvoked()
-                restaurants.test().assertNotInvoked()
-                restaurantReviews.test().assertNotInvoked()
-                showError.test().assertValue("Ocorreu um erro")
-            }
+        viewModel.viewState.apply {
+            showLoading.test().assertValue(false)
+            categories.test().assertNotInvoked()
+            restaurants.test().assertNotInvoked()
+            restaurantReviews.test().assertNotInvoked()
+            showError.test().assertValue("Ocorreu um erro")
         }
     }
 
     @Test
     fun whenGetRestaurantsShouldReturnLoading() {
-        runBlocking {
-            mockGetRestaurantsLoading()
 
-            viewModel.getRestaurants()
+        mockGetRestaurantsLoading()
 
-            delay(DELAY)
+        viewModel.getRestaurants()
 
-            viewModel.viewState.apply {
-                showLoading.test().assertValue(true)
-                categories.test().assertNotInvoked()
-                restaurants.test().assertNotInvoked()
-                restaurantReviews.test().assertNotInvoked()
-                showError.test().assertNotInvoked()
-            }
+        viewModel.viewState.apply {
+            showLoading.test().assertValue(true)
+            categories.test().assertNotInvoked()
+            restaurants.test().assertNotInvoked()
+            restaurantReviews.test().assertNotInvoked()
+            showError.test().assertNotInvoked()
         }
     }
 
     @Test
     fun whenGetRestaurantReviewsShouldReturnList() {
-        runBlocking {
-            mockGetRestaurantReviewsSuccess()
 
-            viewModel.getRestaurantReviews(restaurantId)
+        mockGetRestaurantReviewsSuccess()
 
-            delay(DELAY)
+        viewModel.getRestaurantReviews(restaurantId)
 
-            viewModel.viewState.apply {
-                showLoading.test().assertValue(false)
-                categories.test().assertNotInvoked()
-                restaurants.test().assertNotInvoked()
-                restaurantReviews.test().assertValue(listRestaurantReview)
-                showError.test().assertNotInvoked()
-            }
+        viewModel.viewState.apply {
+            showLoading.test().assertValue(false)
+            categories.test().assertNotInvoked()
+            restaurants.test().assertNotInvoked()
+            restaurantReviews.test().assertValue(listRestaurantReview)
+            showError.test().assertNotInvoked()
         }
     }
 
     @Test
     fun whenGetRestaurantReviewsShouldReturnError() {
-        runBlocking {
-            mockGetRestaurantReviewsError()
 
-            viewModel.getRestaurantReviews(restaurantId)
+        mockGetRestaurantReviewsError()
 
-            delay(DELAY)
+        viewModel.getRestaurantReviews(restaurantId)
 
-            viewModel.viewState.apply {
-                showLoading.test().assertValue(false)
-                categories.test().assertNotInvoked()
-                restaurants.test().assertNotInvoked()
-                restaurantReviews.test().assertNotInvoked()
-                showError.test().assertValue("Ocorreu um erro")
-            }
+        viewModel.viewState.apply {
+            showLoading.test().assertValue(false)
+            categories.test().assertNotInvoked()
+            restaurants.test().assertNotInvoked()
+            restaurantReviews.test().assertNotInvoked()
+            showError.test().assertValue("Ocorreu um erro")
         }
     }
 
     @Test
     fun whenGetRestaurantReviewsShouldReturnLoading() {
-        runBlocking {
-            mockGetRestaurantReviewsLoading()
+        mockGetRestaurantReviewsLoading()
 
-            viewModel.getRestaurantReviews(restaurantId)
+        viewModel.getRestaurantReviews(restaurantId)
 
-            delay(DELAY)
-
-            viewModel.viewState.apply {
-                showLoading.test().assertValue(true)
-                categories.test().assertNotInvoked()
-                restaurants.test().assertNotInvoked()
-                restaurantReviews.test().assertNotInvoked()
-                showError.test().assertNotInvoked()
-            }
+        viewModel.viewState.apply {
+            showLoading.test().assertValue(true)
+            categories.test().assertNotInvoked()
+            restaurants.test().assertNotInvoked()
+            restaurantReviews.test().assertNotInvoked()
+            showError.test().assertNotInvoked()
         }
     }
 
@@ -178,7 +154,7 @@ class RestaurantsViewModelTest {
         data.value = listCategoryRestaurants
         state.value = StateView.SUCCESS
 
-        coEvery {
+        every {
             repository.getCategoriesRestaurants()
         } returns ResourceResponse<List<CategoryRestaurants>>(state, data, message)
     }
@@ -189,7 +165,7 @@ class RestaurantsViewModelTest {
         data.value = listRestaurant
         state.value = StateView.SUCCESS
 
-        coEvery {
+        every {
             repository.getRestaurants(
                 entityId = viewModel.cityId,
                 entityType = GET_RESTAURANTS_ENTITY_TYPE,
@@ -208,7 +184,7 @@ class RestaurantsViewModelTest {
         state.value = StateView.ERROR
         message.value = "Ocorreu um erro"
 
-        coEvery {
+        every {
             repository.getRestaurants(
                 entityId = viewModel.cityId,
                 entityType = GET_RESTAURANTS_ENTITY_TYPE,
@@ -226,7 +202,7 @@ class RestaurantsViewModelTest {
         val (data, state, message) = buildResourceResponse<List<Restaurant>>()
         state.value = StateView.LOADING
 
-        coEvery {
+        every {
             repository.getRestaurants(
                 entityId = viewModel.cityId,
                 entityType = GET_RESTAURANTS_ENTITY_TYPE,
@@ -245,7 +221,7 @@ class RestaurantsViewModelTest {
         data.value = listRestaurantReview
         state.value = StateView.SUCCESS
 
-        coEvery {
+        every {
             repository.getRestaurantReviews(
                 restaurantId = restaurantId,
                 count = GET_RESTAURANTS_REVIEWS_COUNT,
@@ -260,7 +236,7 @@ class RestaurantsViewModelTest {
         state.value = StateView.ERROR
         message.value = "Ocorreu um erro"
 
-        coEvery {
+        every {
             repository.getRestaurantReviews(
                 restaurantId = restaurantId,
                 count = GET_RESTAURANTS_REVIEWS_COUNT,
@@ -274,7 +250,7 @@ class RestaurantsViewModelTest {
         val (data, state, message) = buildResourceResponse<List<RestaurantReview>>()
         state.value = StateView.LOADING
 
-        coEvery {
+        every {
             repository.getRestaurantReviews(
                 restaurantId = restaurantId,
                 count = GET_RESTAURANTS_REVIEWS_COUNT,
@@ -282,11 +258,10 @@ class RestaurantsViewModelTest {
             )
         } returns ResourceResponse<List<RestaurantReview>>(state, data, message)
     }
-    
+
     private fun randomInt(): Int = (0..100).random()
 
     companion object {
-        private const val DELAY = 10L
         private const val GET_RESTAURANTS_ENTITY_TYPE = "city"
         private const val GET_RESTAURANTS_SORT = "rating"
         private const val GET_RESTAURANTS_ORDER = "desc"

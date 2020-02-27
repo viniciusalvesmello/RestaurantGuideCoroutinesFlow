@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
@@ -21,7 +20,6 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg
 import kotlinx.android.synthetic.main.fragment_restaurant_details.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RestaurantDetailsFragment : DaggerFragment() {
@@ -109,9 +107,7 @@ class RestaurantDetailsFragment : DaggerFragment() {
 
             handleRestarantImage(it.image)
 
-            lifecycleScope.launch {
-                viewModel.getRestaurantReviews(it.id)
-            }
+            viewModel.getRestaurantReviews(it.id)
         }
     }
 
