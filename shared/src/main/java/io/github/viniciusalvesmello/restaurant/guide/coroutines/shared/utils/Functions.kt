@@ -5,7 +5,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-suspend fun <T> singleEmit(block: suspend () -> T): Flow<T> = flow {
+fun <T> singleEmit(block: suspend () -> T): Flow<T> = flow {
     emit(block())
 }
 

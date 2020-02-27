@@ -9,8 +9,6 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.mode
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.RestaurantsRepository
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.model.RestaurantsViewState
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.asMutable
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.launchIO
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.ResourceResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.SingleLiveEvent
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.StateView
@@ -64,12 +62,11 @@ class RestaurantsViewModel @Inject constructor(
         }
     }
 
-    fun getCategoriesRestaurants() = launchIO {
+    fun getCategoriesRestaurants() {
         getCategoriesRestaurants.postValue(restaurantsRepository.getCategoriesRestaurants())
     }
 
-    fun getRestaurants() = launchIO {
-        viewState.showLoading.asMutable.postValue(true)
+    fun getRestaurants() {
         getRestaurants.postValue(
             restaurantsRepository.getRestaurants(
                 entityId = cityId,
@@ -93,7 +90,7 @@ class RestaurantsViewModel @Inject constructor(
         getRestaurants()
     }
 
-    fun getRestaurantReviews(restaurantId: Int) = launchIO {
+    fun getRestaurantReviews(restaurantId: Int) {
         getRestaurantReviews.postValue(
             restaurantsRepository.getRestaurantReviews(
                 restaurantId = restaurantId,
@@ -101,6 +98,11 @@ class RestaurantsViewModel @Inject constructor(
                 start = GET_RESTAURANTS_REVIEWS_START
             )
         )
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        restaurantsRepository.dispose()
     }
 
     companion object {

@@ -1,17 +1,17 @@
 package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.listener.RestaurantListener
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.listener.RestaurantsPaginationListener
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.inflate
 
 class RestaurantsAdapter(
     private val listRestaurants: List<Restaurant>,
-    private val restaurantListener: RestaurantListener,
-    private val restaurantsPaginationListener: RestaurantsPaginationListener
+    private val onClick : (view: View, restaurant: Restaurant) -> Unit,
+    private val onClickLastPage : () -> Unit,
+    private val onClickNextPage : () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int =
@@ -38,12 +38,13 @@ class RestaurantsAdapter(
         if (holder.itemViewType == ROW_PAGINATION) {
             (holder as? RestaurantsPaginationViewHolder)?.bind(
                 listRestaurants.size,
-                restaurantsPaginationListener
+                onClickLastPage,
+                onClickNextPage
             )
         } else {
             (holder as? RestaurantViewHolder)?.bind(
                 listRestaurants[position],
-                restaurantListener
+                onClick
             )
         }
     }

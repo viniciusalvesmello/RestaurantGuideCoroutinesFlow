@@ -7,9 +7,9 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel
 
 interface RestaurantsRepository {
 
-    suspend fun getCategoriesRestaurants(): ResourceResponse<List<CategoryRestaurants>>
+    fun getCategoriesRestaurants(): ResourceResponse<List<CategoryRestaurants>>
 
-    suspend fun getRestaurants(
+    fun getRestaurants(
         entityId: Int,
         entityType: String,
         sort: String,
@@ -19,9 +19,11 @@ interface RestaurantsRepository {
         start: Int
     ): ResourceResponse<List<Restaurant>>
 
-    suspend fun getRestaurantReviews(
+    fun getRestaurantReviews(
         restaurantId: Int,
         count: Int,
         start: Int
     ): ResourceResponse<List<RestaurantReview>>
+
+    fun dispose()
 }

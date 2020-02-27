@@ -9,6 +9,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.di.Cities
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.App
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.navigation.di.AppNavigationModule
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.di.RestaurantsActivityBuilder
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.appCoroutines.di.AppCoroutinesModule
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ApplicationModule
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ViewModelFactoryModule
 
@@ -20,6 +21,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection
         ClientModule::class,
         ApiModule::class,
         AppNavigationModule::class,
+        AppCoroutinesModule::class,
         CitiesActivityBuilder::class,
         RestaurantsActivityBuilder::class
     ])
