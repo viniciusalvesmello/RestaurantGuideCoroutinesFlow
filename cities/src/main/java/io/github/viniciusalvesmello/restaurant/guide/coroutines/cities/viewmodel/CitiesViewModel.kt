@@ -9,7 +9,6 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.Cit
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.repository.CitiesRepository
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.viewmodel.model.CitiesViewState
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.asMutable
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.launchIO
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.ResourceResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.StateView
 import javax.inject.Inject
@@ -26,9 +25,6 @@ class CitiesViewModel @Inject constructor(
     }
 
     fun getCities() {
-        launchIO {
-            viewState.showLoading.asMutable.postValue(true)
-            getCities.postValue(citiesRepository.getCities())
-        }
+        getCities.postValue(citiesRepository.getCities())
     }
 }

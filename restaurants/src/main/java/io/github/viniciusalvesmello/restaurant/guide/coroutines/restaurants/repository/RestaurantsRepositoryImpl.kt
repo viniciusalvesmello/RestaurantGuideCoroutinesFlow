@@ -7,6 +7,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.serv
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toCategoryRestaurants
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toRestaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toRestaurantReview
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.appCoroutines.AppCoroutines
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.asResourceResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.utils.singleEmit
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.ResourceResponse
@@ -14,17 +15,18 @@ import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class RestaurantsRepositoryImpl @Inject constructor(
-    private val zomatoService: ZomatoService
+    private val zomatoService: ZomatoService,
+    private val appCoroutines: AppCoroutines
 ) : RestaurantsRepository {
 
-    override suspend fun getCategoriesRestaurants(): ResourceResponse<List<CategoryRestaurants>> =
+    override fun getCategoriesRestaurants(): ResourceResponse<List<CategoryRestaurants>> =
         singleEmit {
             zomatoService.getCategoriesRestaurants().categories.map { response ->
                 response.categories.toCategoryRestaurants()
             }
-        }.asResourceResponse()
+        }.asResourceResponse(appCoroutines)
 
-    override suspend fun getRestaurants(
+    override fun getRestaurants(
         entityId: Int,
         entityType: String,
         sort: String,
@@ -45,9 +47,9 @@ class RestaurantsRepositoryImpl @Inject constructor(
             ).restaurants.map { response ->
                 response.restaurant.toRestaurant()
             }
-        }.asResourceResponse()
+        }.asResourceResponse(appCoroutines)
 
-    override suspend fun getRestaurantReviews(
+    override fun getRestaurantReviews(
         restaurantId: Int,
         count: Int,
         start: Int
@@ -60,5 +62,5 @@ class RestaurantsRepositoryImpl @Inject constructor(
             ).user_reviews.map { response ->
                 response.review.toRestaurantReview()
             }
-        }.asResourceResponse()
+        }.asResourceResponse(appCoroutines)
 }
