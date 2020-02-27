@@ -2,18 +2,17 @@ package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.vie
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.listener.RestaurantsPaginationListener
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
 import kotlinx.android.synthetic.main.row_footer_recycle_view_restaurants.view.*
 
 class RestaurantsPaginationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(count: Int, restaurantsPaginationListener: RestaurantsPaginationListener) {
+    fun bind(count: Int, onClickLastPage : () -> Unit, onClickNextPage : () -> Unit) {
         itemView.btRestaurantsLastPage.setOnClickListener {
-            restaurantsPaginationListener.onClickLastPageFooterRecycleView()
+            onClickLastPage()
         }
         itemView.btRestaurantsNextPage.setOnClickListener {
-            restaurantsPaginationListener.onClickNextPageFooterRecycleView()
+            onClickNextPage()
         }
 
         if(count == 0) {

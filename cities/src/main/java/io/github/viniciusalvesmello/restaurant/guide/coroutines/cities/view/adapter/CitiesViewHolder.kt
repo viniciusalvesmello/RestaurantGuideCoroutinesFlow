@@ -4,12 +4,11 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.R
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.view.listener.CityListener
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.City
 import kotlinx.android.synthetic.main.row_city.view.*
 
 class CitiesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(city: City, cityListener: CityListener) {
+        fun bind(city: City, onClick: (view: View, city: City) -> Unit) {
             Picasso.get()
                 .load(city.imageUrl)
                 .placeholder(R.drawable.no_image)
@@ -17,7 +16,7 @@ class CitiesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 .into(itemView.image_view_city)
             itemView.text_view_city_name.text = city.name
             itemView.card_view_city.setOnClickListener {
-                cityListener.onClickItemRecycleView(it, city)
+                onClick(it, city)
             }
         }
     }

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.DaggerFragment
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.R
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.view.adapter.CitiesAdapter
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.view.listener.CityListener
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.viewmodel.CitiesViewModel
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.observe
@@ -20,7 +19,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigatio
 import kotlinx.android.synthetic.main.cities_fragment.*
 import javax.inject.Inject
 
-class CitiesFragment : DaggerFragment(), CityListener {
+class CitiesFragment : DaggerFragment() {
 
     @Inject
     lateinit var appNavigation: AppNavigation
@@ -70,11 +69,13 @@ class CitiesFragment : DaggerFragment(), CityListener {
     }
 
     private fun handleCities(cities: List<City>) {
-        rvCities.adapter = CitiesAdapter(cities, this)
+        rvCities.adapter = CitiesAdapter(cities) { view, city ->
+            onClickItemRecycleView(view, city)
+        }
         rvCities.layoutManager = LinearLayoutManager(context)
     }
 
-    override fun onClickItemRecycleView(view: View, city: City) {
+    private fun onClickItemRecycleView(view: View, city: City) {
         appNavigation.navigateFromCityToRestaurant(view, city.id, city.name)
     }
 }
