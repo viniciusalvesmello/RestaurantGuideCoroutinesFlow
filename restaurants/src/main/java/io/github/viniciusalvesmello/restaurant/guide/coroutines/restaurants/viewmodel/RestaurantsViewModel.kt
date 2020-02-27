@@ -100,6 +100,11 @@ class RestaurantsViewModel @Inject constructor(
         )
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        restaurantsRepository.dispose()
+    }
+
     companion object {
         private const val GET_RESTAURANTS_ENTITY_TYPE = "city"
         private const val GET_RESTAURANTS_SORT = "rating"
