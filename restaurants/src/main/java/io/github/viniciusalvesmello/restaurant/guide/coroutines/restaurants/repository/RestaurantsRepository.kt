@@ -24,4 +24,6 @@ interface RestaurantsRepository {
         count: Int,
         start: Int
     ): ResourceResponse<List<RestaurantReview>>
+
+    fun dispose()
 }

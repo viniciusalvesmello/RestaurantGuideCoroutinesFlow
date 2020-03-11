@@ -27,4 +27,9 @@ class CitiesViewModel @Inject constructor(
     fun getCities() {
         getCities.postValue(citiesRepository.getCities())
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        citiesRepository.dispose()
+    }
 }

@@ -63,4 +63,8 @@ class RestaurantsRepositoryImpl @Inject constructor(
                 response.review.toRestaurantReview()
             }
         }.asResourceResponse(appCoroutines)
+
+    override fun dispose() {
+        appCoroutines.cancel()
+    }
 }

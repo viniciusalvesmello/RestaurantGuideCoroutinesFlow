@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface CitiesRepository {
     fun getCities(): ResourceResponse<List<City>>
+    fun dispose()
 }

@@ -31,4 +31,8 @@ class CitiesRepositoryImpl @Inject constructor(
             )
         }
     }.asResourceResponse(appCoroutines)
+
+    override fun dispose() {
+        appCoroutines.cancel()
+    }
 }
