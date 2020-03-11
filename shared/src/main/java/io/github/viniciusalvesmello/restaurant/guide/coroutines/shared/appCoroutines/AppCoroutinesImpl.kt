@@ -5,10 +5,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainCoroutineDispatcher
+import kotlinx.coroutines.SupervisorJob
 
 class AppCoroutinesImpl : AppCoroutines {
 
-    private val job: Job = Job()
+    private val job: Job = SupervisorJob()
     private val dispatcherMain: MainCoroutineDispatcher = Dispatchers.Main
     private val dispatcherDefault: CoroutineDispatcher = Dispatchers.Default
     private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO
