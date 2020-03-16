@@ -26,7 +26,7 @@
         android:id="@+id/restaurantsFragment"
         android:name="io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.RestaurantsFragment"
         android:label="RestaurantsFragment"
-        tools:layout="@layout/fragment_restaurants">
+        tools:layout="@layout/restaurants_fragment">
 
         <argument
             android:name="cityId"
@@ -53,7 +53,7 @@
         android:id="@+id/restaurantDetailsFragment"
         android:name="io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.RestaurantDetailsFragment"
         android:label="RestaurantDetailsFragment"
-        tools:layout="@layout/fragment_restaurant_details">
+        tools:layout="@layout/restaurant_details_fragment">
 
         <argument
             android:name="restaurantDetailsArg"
