@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RestaurantDetailsFragmentBinding
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter.RestaurantDetailsReviewsAdapter
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.RestaurantsViewModel
@@ -19,7 +20,6 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ViewModelFactory
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg
-import kotlinx.android.synthetic.main.fragment_restaurant_details.*
 import javax.inject.Inject
 
 class RestaurantDetailsFragment : DaggerFragment() {
@@ -38,12 +38,16 @@ class RestaurantDetailsFragment : DaggerFragment() {
         arguments?.getParcelable(ARGUMENTS_KEY_RESTAURANT_DETAILS_ARG) as? RestaurantDetailsArg
     }
 
+    private lateinit var binding: RestaurantDetailsFragmentBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_restaurant_details, container, false)
+    ): View? {
+        binding = RestaurantDetailsFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,7 +58,7 @@ class RestaurantDetailsFragment : DaggerFragment() {
     }
 
     private fun initListeners() {
-        ivRestaurantDetailsBackPressed.setOnClickListener {
+        binding.ivRestaurantDetailsBackPressed.setOnClickListener {
             appNavigation.onBackPressed(it)
         }
     }
@@ -75,21 +79,21 @@ class RestaurantDetailsFragment : DaggerFragment() {
 
     private fun handleProgressBar(showLoading: Boolean) {
         if (showLoading) {
-            pbRestaurantDetails.visible()
+            binding.pbRestaurantDetails.visible()
         } else {
-            pbRestaurantDetails.gone()
+            binding.pbRestaurantDetails.gone()
         }
     }
 
     private fun handleRestaurantReview(restaurantReview: List<RestaurantReview>) {
-        rvRestaurantDetailsReviews.adapter = RestaurantDetailsReviewsAdapter(restaurantReview)
-        rvRestaurantDetailsReviews.layoutManager = LinearLayoutManager(context)
+        binding.rvRestaurantDetailsReviews.adapter = RestaurantDetailsReviewsAdapter(restaurantReview)
+        binding.rvRestaurantDetailsReviews.layoutManager = LinearLayoutManager(context)
     }
 
     private fun handleError(error: String) {
-        pbRestaurantDetails.gone()
+        binding.pbRestaurantDetails.gone()
         Snackbar.make(
-            clRestaurantDetailsSnackBar,
+            binding.clRestaurantDetailsSnackBar,
             error,
             Snackbar.LENGTH_LONG
         ).show()
@@ -99,11 +103,11 @@ class RestaurantDetailsFragment : DaggerFragment() {
         restaurantDetailsArg?.let {
             val textRating = "${it.rating} - ${it.ratingDescription}"
 
-            tvRestaurantDetailsTitle.text = it.name
-            tvRestaurantDetailsRating.text = textRating
-            tvRestaurantDetailsCuisines.text = it.cuisines
-            tvRestaurantDetailsPhoneNumbers.text = it.phoneNumbers
-            tvRestaurantDetailsAddress.text = it.address
+            binding.tvRestaurantDetailsTitle.text = it.name
+            binding.tvRestaurantDetailsRating.text = textRating
+            binding.tvRestaurantDetailsCuisines.text = it.cuisines
+            binding.tvRestaurantDetailsPhoneNumbers.text = it.phoneNumbers
+            binding.tvRestaurantDetailsAddress.text = it.address
 
             handleRestarantImage(it.image)
 
@@ -117,7 +121,7 @@ class RestaurantDetailsFragment : DaggerFragment() {
                 .load(urlImage)
                 .placeholder(R.drawable.no_image)
                 .error(R.drawable.no_image)
-                .into(ivRestaurantDetails)
+                .into(binding.ivRestaurantDetails)
         }
     }
 
