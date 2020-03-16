@@ -10,6 +10,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerFragment
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RestaurantsFragmentBinding
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.mapper.toRestaurantDetailsArg
@@ -20,7 +21,6 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.visible
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ViewModelFactory
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
-import kotlinx.android.synthetic.main.fragment_restaurants.*
 import javax.inject.Inject
 
 class RestaurantsFragment : DaggerFragment() {
@@ -36,13 +36,16 @@ class RestaurantsFragment : DaggerFragment() {
     }
 
     private lateinit var chipAll: Chip
+    private lateinit var binding: RestaurantsFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_restaurants, container, false)
+    ): View? {
+        binding = RestaurantsFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,11 +56,11 @@ class RestaurantsFragment : DaggerFragment() {
     }
 
     private fun initListeners() {
-        ivRestaurantsBackPressed.setOnClickListener {
+        binding.ivRestaurantsBackPressed.setOnClickListener {
             appNavigation.onBackPressed(it)
         }
 
-        cgRestaurantsCategories.setOnCheckedChangeListener { _, chipId ->
+        binding.cgRestaurantsCategories.setOnCheckedChangeListener { _, chipId ->
             viewModel.categoryId = if (chipId < 0) {
                 chipAll.isChecked = true
                 chipAll.id
@@ -89,37 +92,37 @@ class RestaurantsFragment : DaggerFragment() {
 
     private fun handleProgressBar(showLoading: Boolean) {
         if (showLoading) {
-            pbRestaurants.visible()
+            binding.pbRestaurants.visible()
         } else {
-            pbRestaurants.gone()
+            binding.pbRestaurants.gone()
         }
     }
 
     private fun handleCategories(categories: List<CategoryRestaurants>) {
-        cgRestaurantsCategories.removeAllViews()
+        binding.cgRestaurantsCategories.removeAllViews()
         createChipAll()
         categories.forEach {
-            cgRestaurantsCategories.addView(
+            binding.cgRestaurantsCategories.addView(
                 createChip(it)
             )
         }
     }
 
     private fun handleRestaurants(restaurants: List<Restaurant>) {
-        rvRestaurants.adapter = RestaurantsAdapter(restaurants, { view, restaurant ->
+        binding.rvRestaurants.adapter = RestaurantsAdapter(restaurants, { view, restaurant ->
             onClickItemRecycleView(view, restaurant)
         }, {
             onClickLastPageFooterRecycleView()
         }, {
             onClickNextPageFooterRecycleView()
         })
-        rvRestaurants.layoutManager = LinearLayoutManager(context)
+        binding.rvRestaurants.layoutManager = LinearLayoutManager(context)
     }
 
     private fun handleError(error: String) {
-        pbRestaurants.gone()
+        binding.pbRestaurants.gone()
         Snackbar.make(
-            clRestaurantsSnackBar,
+            binding.clRestaurantsSnackBar,
             error,
             Snackbar.LENGTH_LONG
         ).show()
@@ -129,7 +132,7 @@ class RestaurantsFragment : DaggerFragment() {
         viewModel.cityId = arguments?.getInt(ARGUMENTS_KEY_CITY_ID) ?: 0
         viewModel.cityName = arguments?.getString(ARGUMENTS_KEY_CITY_NAME) ?: ""
 
-        tvRestaurantsTitleCityName.text = viewModel.cityName
+        binding.tvRestaurantsTitleCityName.text = viewModel.cityName
 
         initCategories()
 
@@ -146,7 +149,7 @@ class RestaurantsFragment : DaggerFragment() {
     private fun createChipAll() {
         createChip(CategoryRestaurants(id = 0, name = getString(R.string.all))).apply {
             chipAll = this
-            cgRestaurantsCategories.addView(this)
+            binding.cgRestaurantsCategories.addView(this)
         }
     }
 

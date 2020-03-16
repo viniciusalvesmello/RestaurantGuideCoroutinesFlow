@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.DaggerFragment
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.R
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.databinding.CitiesFragmentBinding
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.view.adapter.CitiesAdapter
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.viewmodel.CitiesViewModel
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
@@ -16,7 +17,6 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.City
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ViewModelFactory
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
-import kotlinx.android.synthetic.main.cities_fragment.*
 import javax.inject.Inject
 
 class CitiesFragment : DaggerFragment() {
@@ -31,12 +31,15 @@ class CitiesFragment : DaggerFragment() {
         ViewModelProvider(this, viewModelFactory)[CitiesViewModel::class.java]
     }
 
+    private lateinit var binding: CitiesFragmentBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.cities_fragment, container, false)
+        binding = CitiesFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,17 +65,17 @@ class CitiesFragment : DaggerFragment() {
 
     private fun handleProgressBar(showLoading: Boolean) {
         if (showLoading) {
-            pbCities.visible()
+            binding.pbCities.visible()
         } else {
-            pbCities.gone()
+            binding.pbCities.gone()
         }
     }
 
     private fun handleCities(cities: List<City>) {
-        rvCities.adapter = CitiesAdapter(cities) { view, city ->
+        binding.rvCities.adapter = CitiesAdapter(cities) { view, city ->
             onClickItemRecycleView(view, city)
         }
-        rvCities.layoutManager = LinearLayoutManager(context)
+        binding.rvCities.layoutManager = LinearLayoutManager(context)
     }
 
     private fun onClickItemRecycleView(view: View, city: City) {

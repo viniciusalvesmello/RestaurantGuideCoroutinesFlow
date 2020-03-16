@@ -33,6 +33,9 @@ android {
                 "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi"]
     }
+    viewBinding {
+        enabled = true
+    }
 }
 
 dependencies {
