@@ -7,26 +7,27 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.serv
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toCategoryRestaurants
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toRestaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toRestaurantReview
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.appCoroutines.AppCoroutines
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.asResourceResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.utils.singleEmit
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.ResourceResponse
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 class RestaurantsRepositoryImpl @Inject constructor(
     private val zomatoService: ZomatoService,
-    private val appCoroutines: AppCoroutines
+    private val coroutineContext: CoroutineContext
 ) : RestaurantsRepository {
 
-    override fun getCategoriesRestaurants(): ResourceResponse<List<CategoryRestaurants>> =
+    override fun getCategoriesRestaurants(coroutineScope: CoroutineScope): ResourceResponse<List<CategoryRestaurants>> =
         singleEmit {
             zomatoService.getCategoriesRestaurants().categories.map { response ->
                 response.categories.toCategoryRestaurants()
             }
-        }.asResourceResponse(appCoroutines)
+        }.asResourceResponse(coroutineScope = coroutineScope, coroutineContext = coroutineContext)
 
     override fun getRestaurants(
+        coroutineScope: CoroutineScope,
         entityId: Int,
         entityType: String,
         sort: String,
@@ -47,9 +48,10 @@ class RestaurantsRepositoryImpl @Inject constructor(
             ).restaurants.map { response ->
                 response.restaurant.toRestaurant()
             }
-        }.asResourceResponse(appCoroutines)
+        }.asResourceResponse(coroutineScope = coroutineScope, coroutineContext = coroutineContext)
 
     override fun getRestaurantReviews(
+        coroutineScope: CoroutineScope,
         restaurantId: Int,
         count: Int,
         start: Int
@@ -62,9 +64,5 @@ class RestaurantsRepositoryImpl @Inject constructor(
             ).user_reviews.map { response ->
                 response.review.toRestaurantReview()
             }
-        }.asResourceResponse(appCoroutines)
-
-    override fun dispose() {
-        appCoroutines.cancel()
-    }
+        }.asResourceResponse(coroutineScope = coroutineScope, coroutineContext = coroutineContext)
 }

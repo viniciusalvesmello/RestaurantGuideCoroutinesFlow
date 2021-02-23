@@ -2,7 +2,7 @@ package io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigati
 
 import android.os.Parcelable
 import androidx.annotation.Keep
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Keep
 @Parcelize

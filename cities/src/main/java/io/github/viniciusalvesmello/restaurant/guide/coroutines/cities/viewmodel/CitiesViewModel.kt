@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.City
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.repository.CitiesRepository
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.viewmodel.model.CitiesViewState
@@ -25,11 +26,6 @@ class CitiesViewModel @Inject constructor(
     }
 
     fun getCities() {
-        getCities.postValue(citiesRepository.getCities())
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        citiesRepository.dispose()
+        getCities.postValue(citiesRepository.getCities(viewModelScope))
     }
 }

@@ -37,7 +37,7 @@ class CitiesFragment : DaggerFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = CitiesFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }

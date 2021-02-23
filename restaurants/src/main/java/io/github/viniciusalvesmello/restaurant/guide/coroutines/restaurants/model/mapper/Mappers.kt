@@ -4,12 +4,12 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.mode
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg
 
 fun Restaurant.toRestaurantDetailsArg() = RestaurantDetailsArg(
-    id,
-    name,
-    cuisines,
-    phoneNumbers,
-    image,
-    rating,
-    ratingDescription,
-    address
+    id = id,
+    name = name,
+    cuisines = cuisines,
+    phoneNumbers = phoneNumbers,
+    image = image,
+    rating = rating,
+    ratingDescription = ratingDescription,
+    address = address
 )

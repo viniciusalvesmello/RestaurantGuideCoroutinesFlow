@@ -4,6 +4,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
@@ -63,12 +64,17 @@ class RestaurantsViewModel @Inject constructor(
     }
 
     fun getCategoriesRestaurants() {
-        getCategoriesRestaurants.postValue(restaurantsRepository.getCategoriesRestaurants())
+        getCategoriesRestaurants.postValue(
+            restaurantsRepository.getCategoriesRestaurants(
+                coroutineScope = viewModelScope
+            )
+        )
     }
 
     fun getRestaurants() {
         getRestaurants.postValue(
             restaurantsRepository.getRestaurants(
+                coroutineScope = viewModelScope,
                 entityId = cityId,
                 entityType = GET_RESTAURANTS_ENTITY_TYPE,
                 sort = GET_RESTAURANTS_SORT,
@@ -93,16 +99,12 @@ class RestaurantsViewModel @Inject constructor(
     fun getRestaurantReviews(restaurantId: Int) {
         getRestaurantReviews.postValue(
             restaurantsRepository.getRestaurantReviews(
+                coroutineScope = viewModelScope,
                 restaurantId = restaurantId,
                 count = GET_RESTAURANTS_REVIEWS_COUNT,
                 start = GET_RESTAURANTS_REVIEWS_START
             )
         )
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        restaurantsRepository.dispose()
     }
 
     companion object {

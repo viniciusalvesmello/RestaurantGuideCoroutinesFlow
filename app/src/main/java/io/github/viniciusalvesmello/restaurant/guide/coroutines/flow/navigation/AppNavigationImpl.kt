@@ -7,8 +7,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg
 
-class AppNavigationImpl :
-    AppNavigation {
+class AppNavigationImpl : AppNavigation {
 
     override fun navigateFromCityToRestaurant(view: View, cityId: Int, cityName: String) {
         view.findNavController().navigate(

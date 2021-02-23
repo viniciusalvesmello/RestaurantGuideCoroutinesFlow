@@ -1,17 +1,18 @@
 package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RowFooterRecycleViewRestaurantsBinding
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RowRestaurantBinding
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.inflate
 
 class RestaurantsAdapter(
     private val listRestaurants: List<Restaurant>,
-    private val onClick : (view: View, restaurant: Restaurant) -> Unit,
-    private val onClickLastPage : () -> Unit,
-    private val onClickNextPage : () -> Unit
+    private val onClick: (view: View, restaurant: Restaurant) -> Unit,
+    private val onClickLastPage: () -> Unit,
+    private val onClickNextPage: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int =
@@ -24,11 +25,19 @@ class RestaurantsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == ROW_PAGINATION) {
             RestaurantsPaginationViewHolder(
-                parent.inflate(R.layout.row_footer_recycle_view_restaurants)
+                RowFooterRecycleViewRestaurantsBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
         } else {
             RestaurantViewHolder(
-                parent.inflate(R.layout.row_restaurant)
+                RowRestaurantBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
         }
 

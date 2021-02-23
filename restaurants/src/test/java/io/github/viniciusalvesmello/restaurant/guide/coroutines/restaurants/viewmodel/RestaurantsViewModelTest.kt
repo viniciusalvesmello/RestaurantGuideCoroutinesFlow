@@ -1,6 +1,7 @@
 package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.viewModelScope
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
@@ -155,7 +156,7 @@ class RestaurantsViewModelTest {
         state.value = StateView.SUCCESS
 
         every {
-            repository.getCategoriesRestaurants()
+            repository.getCategoriesRestaurants(coroutineScope = viewModel.viewModelScope)
         } returns ResourceResponse<List<CategoryRestaurants>>(state, data, message)
     }
 
@@ -167,6 +168,7 @@ class RestaurantsViewModelTest {
 
         every {
             repository.getRestaurants(
+                coroutineScope = viewModel.viewModelScope,
                 entityId = viewModel.cityId,
                 entityType = GET_RESTAURANTS_ENTITY_TYPE,
                 sort = GET_RESTAURANTS_SORT,
@@ -186,6 +188,7 @@ class RestaurantsViewModelTest {
 
         every {
             repository.getRestaurants(
+                coroutineScope = viewModel.viewModelScope,
                 entityId = viewModel.cityId,
                 entityType = GET_RESTAURANTS_ENTITY_TYPE,
                 sort = GET_RESTAURANTS_SORT,
@@ -204,6 +207,7 @@ class RestaurantsViewModelTest {
 
         every {
             repository.getRestaurants(
+                coroutineScope = viewModel.viewModelScope,
                 entityId = viewModel.cityId,
                 entityType = GET_RESTAURANTS_ENTITY_TYPE,
                 sort = GET_RESTAURANTS_SORT,
@@ -223,6 +227,7 @@ class RestaurantsViewModelTest {
 
         every {
             repository.getRestaurantReviews(
+                coroutineScope = viewModel.viewModelScope,
                 restaurantId = restaurantId,
                 count = GET_RESTAURANTS_REVIEWS_COUNT,
                 start = GET_RESTAURANTS_REVIEWS_START
@@ -238,6 +243,7 @@ class RestaurantsViewModelTest {
 
         every {
             repository.getRestaurantReviews(
+                coroutineScope = viewModel.viewModelScope,
                 restaurantId = restaurantId,
                 count = GET_RESTAURANTS_REVIEWS_COUNT,
                 start = GET_RESTAURANTS_REVIEWS_START
@@ -252,6 +258,7 @@ class RestaurantsViewModelTest {
 
         every {
             repository.getRestaurantReviews(
+                coroutineScope = viewModel.viewModelScope,
                 restaurantId = restaurantId,
                 count = GET_RESTAURANTS_REVIEWS_COUNT,
                 start = GET_RESTAURANTS_REVIEWS_START

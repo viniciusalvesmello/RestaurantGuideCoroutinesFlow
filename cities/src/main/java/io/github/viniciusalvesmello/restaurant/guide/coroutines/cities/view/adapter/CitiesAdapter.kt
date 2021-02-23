@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.R
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.databinding.RowCityBinding
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.City
 
 class CitiesAdapter(
@@ -14,8 +14,8 @@ class CitiesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CitiesViewHolder =
         CitiesViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.row_city,
+            RowCityBinding.inflate(
+                LayoutInflater.from(parent.context),
                 parent,
                 false
             )

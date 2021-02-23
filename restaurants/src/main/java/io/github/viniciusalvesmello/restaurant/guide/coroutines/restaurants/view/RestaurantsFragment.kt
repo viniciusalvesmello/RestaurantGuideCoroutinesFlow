@@ -42,7 +42,7 @@ class RestaurantsFragment : DaggerFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = RestaurantsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
