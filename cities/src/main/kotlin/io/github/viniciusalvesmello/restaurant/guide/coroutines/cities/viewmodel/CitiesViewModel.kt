@@ -6,14 +6,15 @@ import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.City
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.repository.CitiesRepository
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.viewmodel.model.CitiesViewState
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.asMutable
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.ResourceResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.StateView
 import javax.inject.Inject
 
+@HiltViewModel
 class CitiesViewModel @Inject constructor(
     private val citiesRepository: CitiesRepository
 ) : ViewModel() {

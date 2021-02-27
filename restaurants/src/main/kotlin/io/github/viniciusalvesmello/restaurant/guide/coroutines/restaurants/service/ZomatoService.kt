@@ -15,8 +15,6 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.util
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.utils.Constants.URL_GET_CATEGORIES_RESTAURANTS
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.utils.Constants.URL_GET_RESTAURANT_REVIEWS
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.utils.Constants.URL_GET_SEARCH_RESTAURANTS
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
