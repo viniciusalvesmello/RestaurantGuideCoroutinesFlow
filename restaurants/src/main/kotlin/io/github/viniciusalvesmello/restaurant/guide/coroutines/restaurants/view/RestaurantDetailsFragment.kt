@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RestaurantDetailsFragmentBinding
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
@@ -17,35 +18,31 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.observe
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.visible
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ViewModelFactory
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg
 import javax.inject.Inject
 
-class RestaurantDetailsFragment : DaggerFragment() {
+@AndroidEntryPoint
+class RestaurantDetailsFragment : Fragment() {
 
     @Inject
     lateinit var appNavigation: AppNavigation
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val viewModel: RestaurantsViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[RestaurantsViewModel::class.java]
-    }
+    private val viewModel: RestaurantsViewModel by viewModels()
 
     private val restaurantDetailsArg: RestaurantDetailsArg? by lazy {
         arguments?.getParcelable(ARGUMENTS_KEY_RESTAURANT_DETAILS_ARG) as? RestaurantDetailsArg
     }
 
-    private lateinit var binding: RestaurantDetailsFragmentBinding
+    private var _binding: RestaurantDetailsFragmentBinding? = null
+    private val binding: RestaurantDetailsFragmentBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = RestaurantDetailsFragmentBinding.inflate(inflater, container, false)
+        _binding = RestaurantDetailsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -123,6 +120,11 @@ class RestaurantDetailsFragment : DaggerFragment() {
                 .error(R.drawable.no_image)
                 .into(binding.ivRestaurantDetails)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

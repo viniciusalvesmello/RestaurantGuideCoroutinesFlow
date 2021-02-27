@@ -1,8 +1,10 @@
-package io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.injection
+package io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.di
 
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Converter
@@ -10,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
+@InstallIn(SingletonComponent::class)
 open class ApiModule {
 
     @Provides

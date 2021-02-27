@@ -4,41 +4,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.DaggerFragment
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.R
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.databinding.CitiesFragmentBinding
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.City
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.view.adapter.CitiesAdapter
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.viewmodel.CitiesViewModel
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.observe
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.visible
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.City
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ViewModelFactory
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import javax.inject.Inject
 
-class CitiesFragment : DaggerFragment() {
+@AndroidEntryPoint
+class CitiesFragment : Fragment() {
 
     @Inject
     lateinit var appNavigation: AppNavigation
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: CitiesViewModel by viewModels()
 
-    private val viewModel: CitiesViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[CitiesViewModel::class.java]
-    }
-
-    private lateinit var binding: CitiesFragmentBinding
+    private var _binding: CitiesFragmentBinding? = null
+    private val binding: CitiesFragmentBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = CitiesFragmentBinding.inflate(inflater, container, false)
+        _binding = CitiesFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -80,5 +76,10 @@ class CitiesFragment : DaggerFragment() {
 
     private fun onClickItemRecycleView(view: View, city: City) {
         appNavigation.navigateFromCityToRestaurant(view, city.id, city.name)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

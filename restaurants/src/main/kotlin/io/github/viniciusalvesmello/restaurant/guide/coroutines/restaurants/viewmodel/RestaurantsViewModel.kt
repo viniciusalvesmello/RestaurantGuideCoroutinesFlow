@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
@@ -15,6 +16,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.StateView
 import javax.inject.Inject
 
+@HiltViewModel
 class RestaurantsViewModel @Inject constructor(
     private val restaurantsRepository: RestaurantsRepository
 ) : ViewModel() {

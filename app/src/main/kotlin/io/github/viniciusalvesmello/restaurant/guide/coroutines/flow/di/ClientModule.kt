@@ -1,16 +1,15 @@
-package io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.injection
+package io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.di
 
 import android.content.Context
-import android.net.ConnectivityManager
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.BuildConfig
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.utils.Constants.CACHE_OFF_LINE_SEVEN_DAYS_IN_SECONDS
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.utils.Constants.CACHE_SIZE_5_MEGA_BYTES
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.utils.Constants.CACHE_TIME_ON_LINE_ONE_HOUR_IN_SECONDS
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.flow.utils.Constants.TIME_OUT_30_SECONDS
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.getStatusConnection
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ApplicationQualifier
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -18,11 +17,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 @Module
+@InstallIn(SingletonComponent::class)
 class ClientModule {
 
     @Provides
     fun providesOkHttpClient(
-        @ApplicationQualifier context: Context
+        @ApplicationContext context: Context
     ): OkHttpClient {
 
         val okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()

@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RestaurantsFragmentBinding
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
@@ -19,31 +20,28 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.observe
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.visible
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.injection.ViewModelFactory
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import javax.inject.Inject
 
-class RestaurantsFragment : DaggerFragment() {
+@AndroidEntryPoint
+class RestaurantsFragment : Fragment() {
 
     @Inject
     lateinit var appNavigation: AppNavigation
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: RestaurantsViewModel by viewModels()
 
-    private val viewModel: RestaurantsViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[RestaurantsViewModel::class.java]
-    }
+    private var _binding: RestaurantsFragmentBinding? = null
+    private val binding: RestaurantsFragmentBinding get() = _binding!!
 
     private lateinit var chipAll: Chip
-    private lateinit var binding: RestaurantsFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = RestaurantsFragmentBinding.inflate(inflater, container, false)
+        _binding = RestaurantsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -176,6 +174,11 @@ class RestaurantsFragment : DaggerFragment() {
 
     private fun onClickNextPageFooterRecycleView() {
         viewModel.getRestaurantsNextPage()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
