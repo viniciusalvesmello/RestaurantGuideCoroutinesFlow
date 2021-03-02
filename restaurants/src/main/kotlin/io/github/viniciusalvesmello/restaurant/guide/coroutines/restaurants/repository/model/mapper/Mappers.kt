@@ -1,6 +1,6 @@
-package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.mapper
+package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.mapper
 
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg
 
 fun Restaurant.toRestaurantDetailsArg() = RestaurantDetailsArg(

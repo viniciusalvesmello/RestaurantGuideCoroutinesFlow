@@ -17,7 +17,7 @@ class RestaurantsModule {
     @Provides
     fun provideRepository(zomatoService: ZomatoService): RestaurantsRepository =
         RestaurantsRepositoryImpl(
-            zomatoService = zomatoService,
+            service = zomatoService,
             coroutineContext = Dispatchers.IO
         )
 

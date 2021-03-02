@@ -6,21 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RestaurantsFragmentBinding
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.mapper.toRestaurantDetailsArg
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.CategoryRestaurants
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.mapper.toRestaurantDetailsArg
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter.RestaurantsAdapter
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.RestaurantsViewModel
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.collectLatest
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.handleNetworkError
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.observe
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.visible
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -28,6 +32,10 @@ class RestaurantsFragment : Fragment() {
 
     @Inject
     lateinit var appNavigation: AppNavigation
+
+    private val listAdapter: RestaurantsAdapter by lazy {
+        RestaurantsAdapter(::onClickItemRecycleView)
+    }
 
     private val viewModel: RestaurantsViewModel by viewModels()
 
@@ -48,9 +56,27 @@ class RestaurantsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initListeners()
-        initObserver()
         initView()
+        initAdapter()
+        initListeners()
+        initCollectors()
+        initObserver()
+    }
+
+    private fun initView() {
+        viewModel.request.cityId = arguments?.getInt(ARGUMENTS_KEY_CITY_ID) ?: 0
+        viewModel.request.cityName = arguments?.getString(ARGUMENTS_KEY_CITY_NAME) ?: ""
+
+        binding.tvRestaurantsTitleCityName.text = viewModel.request.cityName
+
+        if (viewModel.viewState.categories.value == null) {
+            viewModel.getCategoriesRestaurants()
+            createChipAll()
+        }
+    }
+
+    private fun initAdapter() {
+        binding.rvRestaurants.adapter = listAdapter
     }
 
     private fun initListeners() {
@@ -59,33 +85,38 @@ class RestaurantsFragment : Fragment() {
         }
 
         binding.cgRestaurantsCategories.setOnCheckedChangeListener { _, chipId ->
-            viewModel.categoryId = if (chipId < 0) {
+            viewModel.request.categoryId = if (chipId < 0) {
                 chipAll.isChecked = true
                 chipAll.id
             } else {
                 chipId
             }
-            viewModel.startItem = 0
-            viewModel.getRestaurants()
+            listAdapter.refresh()
+        }
+    }
+
+    private fun initCollectors() {
+        collectLatest(viewModel.pagingData) { listAdapter.submitData(it) }
+        collectLatest(listAdapter.loadStateFlow.distinctUntilChangedBy { it.refresh }) { loadState ->
+            when (loadState.refresh) {
+                is LoadState.Loading -> {
+                    handleProgressBar(true)
+                }
+                is LoadState.NotLoading -> {
+                    handleProgressBar(false)
+                }
+                is LoadState.Error -> {
+                    handleProgressBar(false)
+                    handleError((loadState.refresh as LoadState.Error).error)
+                }
+            }
         }
     }
 
     private fun initObserver() = with(viewModel.viewState) {
-        observe(showLoading) {
-            handleProgressBar(it)
-        }
-
-        observe(categories) {
-            handleCategories(it)
-        }
-
-        observe(restaurants) {
-            handleRestaurants(it)
-        }
-
-        observe(showError) {
-            handleError(it)
-        }
+        observe(showLoading) { handleProgressBar(it) }
+        observe(categories) { handleCategories(it) }
+        observe(showError) { handleError(it) }
     }
 
     private fun handleProgressBar(showLoading: Boolean) {
@@ -106,15 +137,9 @@ class RestaurantsFragment : Fragment() {
         }
     }
 
-    private fun handleRestaurants(restaurants: List<Restaurant>) {
-        binding.rvRestaurants.adapter = RestaurantsAdapter(restaurants, { view, restaurant ->
-            onClickItemRecycleView(view, restaurant)
-        }, {
-            onClickLastPageFooterRecycleView()
-        }, {
-            onClickNextPageFooterRecycleView()
-        })
-        binding.rvRestaurants.layoutManager = LinearLayoutManager(context)
+    private fun handleError(throwable: Throwable) {
+        val message = throwable.handleNetworkError()
+        handleError("${message.first} ${message.second}")
     }
 
     private fun handleError(error: String) {
@@ -124,24 +149,6 @@ class RestaurantsFragment : Fragment() {
             error,
             Snackbar.LENGTH_LONG
         ).show()
-    }
-
-    private fun initView() {
-        viewModel.cityId = arguments?.getInt(ARGUMENTS_KEY_CITY_ID) ?: 0
-        viewModel.cityName = arguments?.getString(ARGUMENTS_KEY_CITY_NAME) ?: ""
-
-        binding.tvRestaurantsTitleCityName.text = viewModel.cityName
-
-        initCategories()
-
-        viewModel.getRestaurants()
-    }
-
-    private fun initCategories() {
-        if (viewModel.viewState.categories.value == null) {
-            viewModel.getCategoriesRestaurants()
-            createChipAll()
-        }
     }
 
     private fun createChipAll() {
@@ -157,7 +164,7 @@ class RestaurantsFragment : Fragment() {
         chip.text = categoryRestaurantsView.name
         chip.isClickable = true
         chip.isCheckable = true
-        chip.isChecked = (viewModel.categoryId == chip.id)
+        chip.isChecked = (viewModel.request.categoryId == chip.id)
         return chip
     }
 
@@ -166,14 +173,6 @@ class RestaurantsFragment : Fragment() {
             view,
             restaurant.toRestaurantDetailsArg()
         )
-    }
-
-    private fun onClickLastPageFooterRecycleView() {
-        viewModel.getRestaurantsLastPage()
-    }
-
-    private fun onClickNextPageFooterRecycleView() {
-        viewModel.getRestaurantsNextPage()
     }
 
     override fun onDestroyView() {

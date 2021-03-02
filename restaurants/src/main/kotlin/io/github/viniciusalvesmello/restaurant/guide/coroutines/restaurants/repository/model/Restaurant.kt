@@ -1,4 +1,4 @@
-package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model
+package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model
 
 import androidx.annotation.Keep
 

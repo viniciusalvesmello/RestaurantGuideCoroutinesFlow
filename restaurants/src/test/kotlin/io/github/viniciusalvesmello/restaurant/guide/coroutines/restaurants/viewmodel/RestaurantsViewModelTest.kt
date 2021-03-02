@@ -2,9 +2,9 @@ package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.vie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.viewModelScope
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.CategoryRestaurants
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.RestaurantReview
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.RestaurantsRepository
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.test
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.utils.buildResourceResponse

@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RowRestaurantBinding
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
 
 class RestaurantViewHolder(
     private val binding: RowRestaurantBinding

@@ -5,31 +5,31 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.CategoryRestaurants
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.RestaurantReview
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.RestaurantsRepository
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.model.RestaurantsViewState
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.RestaurantsRequest
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.state.RestaurantsViewState
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.ResourceResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.SingleLiveEvent
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.viewmodel.StateView
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class RestaurantsViewModel @Inject constructor(
-    private val restaurantsRepository: RestaurantsRepository
+    private val repository: RestaurantsRepository
 ) : ViewModel() {
 
-    var cityId = 0
-    var cityName = ""
-    var categoryId = 0
-    var startItem = 0
+    val request = RestaurantsRequest()
+    val pagingData: Flow<PagingData<Restaurant>>
+        get() = repository.getRestaurants(request, viewModelScope)
 
     private var onLoading: MediatorLiveData<Boolean> = MediatorLiveData()
     private var getCategoriesRestaurants: MutableLiveData<ResourceResponse<List<CategoryRestaurants>>> =
-        SingleLiveEvent()
-    private var getRestaurants: MutableLiveData<ResourceResponse<List<Restaurant>>> =
         SingleLiveEvent()
     private var getRestaurantReviews: MutableLiveData<ResourceResponse<List<RestaurantReview>>> =
         SingleLiveEvent()
@@ -37,11 +37,6 @@ class RestaurantsViewModel @Inject constructor(
 
     var viewState = RestaurantsViewState().apply {
         showLoading = onLoading.apply {
-            addSource(switchMap(getRestaurants) { it.state }) {
-                it?.let {
-                    onLoading.value = it == StateView.LOADING
-                }
-            }
             addSource(switchMap(getRestaurantReviews) { it.state }) {
                 it?.let {
                     onLoading.value = it == StateView.LOADING
@@ -49,14 +44,8 @@ class RestaurantsViewModel @Inject constructor(
             }
         }
         categories = switchMap(getCategoriesRestaurants) { it.data }
-        restaurants = switchMap(getRestaurants) { it.data }
         restaurantReviews = switchMap(getRestaurantReviews) { it.data }
         showError = onError.apply {
-            addSource(switchMap(getRestaurants) { it.message }) {
-                it?.let {
-                    onError.value = it
-                }
-            }
             addSource(switchMap(getRestaurantReviews) { it.message }) {
                 it?.let {
                     onError.value = it
@@ -67,40 +56,15 @@ class RestaurantsViewModel @Inject constructor(
 
     fun getCategoriesRestaurants() {
         getCategoriesRestaurants.postValue(
-            restaurantsRepository.getCategoriesRestaurants(
+            repository.getCategoriesRestaurants(
                 coroutineScope = viewModelScope
             )
         )
     }
 
-    fun getRestaurants() {
-        getRestaurants.postValue(
-            restaurantsRepository.getRestaurants(
-                coroutineScope = viewModelScope,
-                entityId = cityId,
-                entityType = GET_RESTAURANTS_ENTITY_TYPE,
-                sort = GET_RESTAURANTS_SORT,
-                order = GET_RESTAURANTS_ORDER,
-                category = categoryId,
-                count = GET_RESTAURANTS_COUNT,
-                start = startItem
-            )
-        )
-    }
-
-    fun getRestaurantsLastPage() {
-        startItem -= GET_RESTAURANTS_COUNT
-        getRestaurants()
-    }
-
-    fun getRestaurantsNextPage() {
-        startItem += GET_RESTAURANTS_COUNT
-        getRestaurants()
-    }
-
     fun getRestaurantReviews(restaurantId: Int) {
         getRestaurantReviews.postValue(
-            restaurantsRepository.getRestaurantReviews(
+            repository.getRestaurantReviews(
                 coroutineScope = viewModelScope,
                 restaurantId = restaurantId,
                 count = GET_RESTAURANTS_REVIEWS_COUNT,
@@ -110,10 +74,6 @@ class RestaurantsViewModel @Inject constructor(
     }
 
     companion object {
-        private const val GET_RESTAURANTS_ENTITY_TYPE = "city"
-        private const val GET_RESTAURANTS_SORT = "rating"
-        private const val GET_RESTAURANTS_ORDER = "desc"
-        private const val GET_RESTAURANTS_COUNT = 10
         private const val GET_RESTAURANTS_REVIEWS_COUNT = 50
         private const val GET_RESTAURANTS_REVIEWS_START = 0
     }

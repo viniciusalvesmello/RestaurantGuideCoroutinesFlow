@@ -1,8 +1,8 @@
-package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper
+package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.mapper
 
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.CategoryRestaurants
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.Restaurant
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.model.RestaurantReview
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.CategoryRestaurants
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.RestaurantReview
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.model.CategoriesRestaurantsResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.model.RestaurantReviewsResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.model.RestaurantsResponse

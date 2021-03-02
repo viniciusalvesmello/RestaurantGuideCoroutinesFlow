@@ -2,9 +2,9 @@ package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.rep
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.ZomatoService
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toCategoryRestaurants
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toRestaurant
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.mapper.toRestaurantReview
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.mapper.toCategoryRestaurants
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.mapper.toRestaurant
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.mapper.toRestaurantReview
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.model.CategoriesRestaurantsResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.model.RestaurantReviewsResponse
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.model.RestaurantsResponse
