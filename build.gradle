@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.4.31'
-    ext.navigation_version = "2.3.3"
+    ext.navigation_version = "2.3.4"
     ext.hilt_version = "2.33-beta"
     repositories {
         google()
@@ -8,7 +8,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.android.tools.build:gradle:4.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
@@ -55,7 +55,8 @@ ext {
 
     coroutines_version = "1.4.2"
     lifecycle_version = "2.3.0"
-    paging_version = "3.0.0-beta01"
+    room_version = "2.3.0-beta03"
+    paging_version = "3.0.0-beta02"
 
     retrofit2_version = "2.9.0"
 

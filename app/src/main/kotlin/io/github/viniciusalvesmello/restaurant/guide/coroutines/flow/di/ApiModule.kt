@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
-open class ApiModule {
+class ApiModule {
 
     @Provides
     fun provideGson(): Gson = Gson()

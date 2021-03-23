@@ -1,30 +1,38 @@
 package io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.view.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
+import io.github.viniciusalvesmello.cache.cities.model.City
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.databinding.RowCityBinding
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.cities.model.City
 
 class CitiesAdapter(
-    private val listCities: List<City>,
-    private val onClick: (view: View, city: City) -> Unit
-) : RecyclerView.Adapter<CitiesViewHolder>() {
+    private val listener: CitiesViewHolder.Listener
+) : PagingDataAdapter<City, CitiesViewHolder>(diffCallback) {
+
+    override fun onBindViewHolder(holder: CitiesViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CitiesViewHolder =
         CitiesViewHolder(
-            RowCityBinding.inflate(
+            binding = RowCityBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            listener = listener
         )
 
-    override fun getItemCount(): Int = listCities.count()
+    companion object {
+        private val diffCallback
+            get() = object : DiffUtil.ItemCallback<City>() {
+                override fun areItemsTheSame(oldItem: City, newItem: City): Boolean =
+                    oldItem.id == newItem.id
 
-    override fun onBindViewHolder(holder: CitiesViewHolder, position: Int) =
-        holder.bind(listCities[position], onClick)
-
-
+                override fun areContentsTheSame(oldItem: City, newItem: City): Boolean =
+                    oldItem == newItem
+            }
+    }
 }

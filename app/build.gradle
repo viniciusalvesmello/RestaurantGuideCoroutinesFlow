@@ -41,6 +41,7 @@ dependencies {
     /*Modules*/
     implementation project(':features:cities')
     implementation project(':features:restaurants')
+    implementation project(':core:cache')
     implementation project(':core:shared')
 
     /*General*/
