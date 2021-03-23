@@ -39,9 +39,9 @@ android {
 
 dependencies {
     /*Modules*/
-    implementation project(path: ':cities')
-    implementation project(path: ':restaurants')
-    implementation project(path: ':shared')
+    implementation project(':features:cities')
+    implementation project(':features:restaurants')
+    implementation project(':core:shared')
 
     /*General*/
     implementation fileTree(dir: 'libs', include: ['*.jar'])
