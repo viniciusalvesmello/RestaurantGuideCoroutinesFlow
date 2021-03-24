@@ -4,10 +4,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.RestaurantsRepository
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.RestaurantsRepositoryImpl
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.RestaurantReviewsRepository
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.RestaurantReviewsRepositoryImpl
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.service.ZomatoService
-import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 
 @Module
@@ -15,11 +14,8 @@ import retrofit2.Retrofit
 class RestaurantsModule {
 
     @Provides
-    fun provideRepository(zomatoService: ZomatoService): RestaurantsRepository =
-        RestaurantsRepositoryImpl(
-            service = zomatoService,
-            coroutineContext = Dispatchers.IO
-        )
+    fun provideRestaurantReviewsRepository(zomatoService: ZomatoService): RestaurantReviewsRepository =
+        RestaurantReviewsRepositoryImpl(service = zomatoService)
 
     @Provides
     fun provideContactService(retrofit: Retrofit): ZomatoService =

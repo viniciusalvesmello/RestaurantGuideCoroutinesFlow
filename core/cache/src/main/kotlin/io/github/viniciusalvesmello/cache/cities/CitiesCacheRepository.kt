@@ -5,6 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.github.viniciusalvesmello.cache.cities.mapper.toCity
 import io.github.viniciusalvesmello.cache.cities.model.City
 import io.github.viniciusalvesmello.cache.cities.room.CityDao
@@ -13,13 +16,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface CitiesCacheRepository {
-    fun citiesPagingData(viewModelScope: CoroutineScope): Flow<PagingData<City>>
+    fun citiesPagingData(): Flow<PagingData<City>>
 }
 
-class CitiesCacheRepositoryImpl(
-    private val cityDao: CityDao
+class CitiesCacheRepositoryImpl @AssistedInject constructor(
+    private val cityDao: CityDao,
+    @Assisted private val viewModelScope: CoroutineScope
 ) : CitiesCacheRepository {
-    override fun citiesPagingData(viewModelScope: CoroutineScope): Flow<PagingData<City>> =
+
+    override fun citiesPagingData(): Flow<PagingData<City>> =
         Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
@@ -31,6 +36,11 @@ class CitiesCacheRepositoryImpl(
         }.flow.map { pagingData ->
             pagingData.map { it.toCity() }
         }.cachedIn(viewModelScope)
+
+    @AssistedFactory
+    interface CitiesCacheRepositoryFactory {
+        fun create(viewModelScope: CoroutineScope): CitiesCacheRepositoryImpl
+    }
 
     companion object {
         private const val PAGE_SIZE = 10

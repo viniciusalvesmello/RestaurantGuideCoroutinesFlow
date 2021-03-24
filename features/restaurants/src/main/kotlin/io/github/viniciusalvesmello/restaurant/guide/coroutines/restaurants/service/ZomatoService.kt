@@ -41,7 +41,7 @@ interface ZomatoService {
     @Headers(HEADER_CONTEXT_TYPE)
     @GET(URL_GET_RESTAURANT_REVIEWS)
     suspend fun getRestaurantReviews(
-        @Query(PARAM_RESTAURANT_ID) restaurantId: Int,
+        @Query(PARAM_RESTAURANT_ID) id: Int,
         @Query(PARAM_COUNT) count: Int,
         @Query(PARAM_START) start: Int
     ): RestaurantReviewsResponse

@@ -4,9 +4,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-fun CoroutineScope.launchMain(block: suspend () -> Unit) = launch(Dispatchers.Main) { block() }
-
-fun CoroutineScope.launchDefault(block: suspend () -> Unit) =
-    launch(Dispatchers.Default) { block() }
-
-fun CoroutineScope.launchIO(block: suspend () -> Unit) = launch(Dispatchers.IO) { block() }
+fun CoroutineScope.launchIO(
+    error: suspend (throwable: Throwable) -> Unit = {},
+    success: suspend () -> Unit,
+) = launch(Dispatchers.IO) {
+    try {
+        success()
+    } catch (throwable: Throwable) {
+        error(throwable)
+    }
+}

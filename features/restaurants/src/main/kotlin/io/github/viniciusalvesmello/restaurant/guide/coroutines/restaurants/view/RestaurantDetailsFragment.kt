@@ -14,9 +14,11 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RestaurantDetailsFragmentBinding
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.RestaurantReview
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter.RestaurantDetailsReviewsAdapter
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.RestaurantsViewModel
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.RestaurantReviewsViewModel
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.viewstate.RestaurantReviewsViewState
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.collectLatest
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.observe
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.handleNetworkError
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.visible
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg
@@ -28,7 +30,7 @@ class RestaurantDetailsFragment : Fragment() {
     @Inject
     lateinit var appNavigation: AppNavigation
 
-    private val viewModel: RestaurantsViewModel by viewModels()
+    private val viewModel: RestaurantReviewsViewModel by viewModels()
 
     private val restaurantDetailsArg: RestaurantDetailsArg? by lazy {
         arguments?.getParcelable(ARGUMENTS_KEY_RESTAURANT_DETAILS_ARG) as? RestaurantDetailsArg
@@ -49,51 +51,9 @@ class RestaurantDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initListeners()
-        initObserver()
         initView()
-    }
-
-    private fun initListeners() {
-        binding.ivRestaurantDetailsBackPressed.setOnClickListener {
-            appNavigation.onBackPressed(it)
-        }
-    }
-
-    private fun initObserver() = with(viewModel.viewState) {
-        observe(showLoading) {
-            handleProgressBar(it)
-        }
-
-        observe(restaurantReviews) {
-            handleRestaurantReview(it)
-        }
-
-        observe(showError) {
-            handleError(it)
-        }
-    }
-
-    private fun handleProgressBar(showLoading: Boolean) {
-        if (showLoading) {
-            binding.pbRestaurantDetails.visible()
-        } else {
-            binding.pbRestaurantDetails.gone()
-        }
-    }
-
-    private fun handleRestaurantReview(restaurantReview: List<RestaurantReview>) {
-        binding.rvRestaurantDetailsReviews.adapter = RestaurantDetailsReviewsAdapter(restaurantReview)
-        binding.rvRestaurantDetailsReviews.layoutManager = LinearLayoutManager(context)
-    }
-
-    private fun handleError(error: String) {
-        binding.pbRestaurantDetails.gone()
-        Snackbar.make(
-            binding.clRestaurantDetailsSnackBar,
-            error,
-            Snackbar.LENGTH_LONG
-        ).show()
+        initListeners()
+        initCollectors()
     }
 
     private fun initView() {
@@ -110,6 +70,52 @@ class RestaurantDetailsFragment : Fragment() {
 
             viewModel.getRestaurantReviews(it.id)
         }
+    }
+
+    private fun initListeners() {
+        binding.ivRestaurantDetailsBackPressed.setOnClickListener {
+            appNavigation.onBackPressed(it)
+        }
+    }
+
+    private fun initCollectors() {
+        collectLatest(viewModel.viewState) { it?.let { handleViewState(it) } }
+    }
+
+    private fun handleViewState(viewState: RestaurantReviewsViewState) = when(viewState) {
+        is RestaurantReviewsViewState.Loading -> {
+            showLoading()
+        }
+        is RestaurantReviewsViewState.Error -> {
+            hideLoading()
+            handleError(viewState.throwable)
+        }
+        is RestaurantReviewsViewState.ListRestaurantReview -> {
+            handleRestaurantReview(viewState.list)
+        }
+    }
+
+    private fun showLoading() = binding.pbRestaurantDetails.visible()
+
+    private fun hideLoading() = binding.pbRestaurantDetails.visible()
+
+    private fun handleRestaurantReview(restaurantReview: List<RestaurantReview>) {
+        binding.rvRestaurantDetailsReviews.adapter = RestaurantDetailsReviewsAdapter(restaurantReview)
+        binding.rvRestaurantDetailsReviews.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun handleError(throwable: Throwable) {
+        val message = throwable.handleNetworkError()
+        handleError("${message.first} ${message.second}")
+    }
+
+    private fun handleError(error: String) {
+        binding.pbRestaurantDetails.gone()
+        Snackbar.make(
+            binding.clRestaurantDetailsSnackBar,
+            error,
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 
     private fun handleRestarantImage(urlImage: String) {

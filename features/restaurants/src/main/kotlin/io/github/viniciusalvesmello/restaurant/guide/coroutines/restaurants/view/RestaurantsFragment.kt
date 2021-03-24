@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,10 +17,11 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repo
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.mapper.toRestaurantDetailsArg
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter.RestaurantsAdapter
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.RestaurantsViewModel
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.viewstate.RestaurantsViewState
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.collectLatest
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.handle
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.handleNetworkError
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.observe
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.visible
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -60,19 +60,14 @@ class RestaurantsFragment : Fragment() {
         initAdapter()
         initListeners()
         initCollectors()
-        initObserver()
     }
 
     private fun initView() {
-        viewModel.request.cityId = arguments?.getInt(ARGUMENTS_KEY_CITY_ID) ?: 0
-        viewModel.request.cityName = arguments?.getString(ARGUMENTS_KEY_CITY_NAME) ?: ""
-
+        viewModel.request.cityId = arguments?.getInt(ARGUMENTS_KEY_CITY_ID).handle()
+        viewModel.request.cityName = arguments?.getString(ARGUMENTS_KEY_CITY_NAME).handle()
         binding.tvRestaurantsTitleCityName.text = viewModel.request.cityName
-
-        if (viewModel.viewState.categories.value == null) {
-            viewModel.getCategoriesRestaurants()
-            createChipAll()
-        }
+        viewModel.getCategoriesRestaurants()
+        createChipAll()
     }
 
     private fun initAdapter() {
@@ -96,34 +91,27 @@ class RestaurantsFragment : Fragment() {
     }
 
     private fun initCollectors() {
+        collectLatest(viewModel.viewState) { it?.let { handleViewState(it) } }
         collectLatest(viewModel.pagingData) { listAdapter.submitData(it) }
         collectLatest(listAdapter.loadStateFlow.distinctUntilChangedBy { it.refresh }) { loadState ->
             when (loadState.refresh) {
                 is LoadState.Loading -> {
-                    handleProgressBar(true)
+                    showLoading()
                 }
                 is LoadState.NotLoading -> {
-                    handleProgressBar(false)
+                    hideLoading()
                 }
                 is LoadState.Error -> {
-                    handleProgressBar(false)
+                    hideLoading()
                     handleError((loadState.refresh as LoadState.Error).error)
                 }
             }
         }
     }
 
-    private fun initObserver() = with(viewModel.viewState) {
-        observe(showLoading) { handleProgressBar(it) }
-        observe(categories) { handleCategories(it) }
-        observe(showError) { handleError(it) }
-    }
-
-    private fun handleProgressBar(showLoading: Boolean) {
-        if (showLoading) {
-            binding.pbRestaurants.visible()
-        } else {
-            binding.pbRestaurants.gone()
+    private fun handleViewState(viewState: RestaurantsViewState) = when (viewState) {
+        is RestaurantsViewState.ListCategoryRestaurants -> {
+            handleCategories(viewState.list)
         }
     }
 
@@ -136,6 +124,10 @@ class RestaurantsFragment : Fragment() {
             )
         }
     }
+
+    private fun showLoading() = binding.pbRestaurants.visible()
+
+    private fun hideLoading() = binding.pbRestaurants.gone()
 
     private fun handleError(throwable: Throwable) {
         val message = throwable.handleNetworkError()
