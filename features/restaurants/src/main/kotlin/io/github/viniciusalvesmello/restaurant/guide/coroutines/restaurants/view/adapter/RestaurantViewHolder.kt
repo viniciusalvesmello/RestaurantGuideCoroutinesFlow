@@ -8,10 +8,11 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.data
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
 
 class RestaurantViewHolder(
-    private val binding: RowRestaurantBinding
+    private val binding: RowRestaurantBinding,
+    private val listener: Listener
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(restaurant: Restaurant, onClick : (view: View, restaurant: Restaurant) -> Unit) = with(binding) {
+    fun bind(restaurant: Restaurant) = with(binding) {
         if (restaurant.thumb.isNotEmpty())
             Picasso.get()
                 .load(restaurant.thumb)
@@ -23,7 +24,11 @@ class RestaurantViewHolder(
         tvRestaurantName.text = restaurant.name
         tvRestaurantLocality.text = restaurant.locality
         cvRestaurant.setOnClickListener {
-            onClick(it, restaurant)
+            listener.onCardClickListener(it, restaurant)
         }
+    }
+
+    interface Listener {
+        fun onCardClickListener(view: View, restaurant: Restaurant)
     }
 }

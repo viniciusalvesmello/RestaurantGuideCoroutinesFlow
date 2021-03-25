@@ -1,7 +1,6 @@
 package io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -9,24 +8,25 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.data
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
 
 class RestaurantsAdapter(
-    private val onClick: (view: View, restaurant: Restaurant) -> Unit,
+    private val listener: RestaurantViewHolder.Listener
 ) : PagingDataAdapter<Restaurant, RestaurantViewHolder>(diffUtilCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RestaurantViewHolder =
         RestaurantViewHolder(
-                RowRestaurantBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-            )
+            binding = RowRestaurantBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ),
+            listener = listener
+        )
 
     override fun onBindViewHolder(holder: RestaurantViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it, onClick) }
+        getItem(position)?.let { holder.bind(it) }
     }
 
     companion object {
-        private val diffUtilCallBack = object : DiffUtil.ItemCallback<Restaurant>() {
+        private val diffUtilCallBack get() = object : DiffUtil.ItemCallback<Restaurant>() {
             override fun areItemsTheSame(oldItem: Restaurant, newItem: Restaurant): Boolean =
                 oldItem.id == newItem.id
 

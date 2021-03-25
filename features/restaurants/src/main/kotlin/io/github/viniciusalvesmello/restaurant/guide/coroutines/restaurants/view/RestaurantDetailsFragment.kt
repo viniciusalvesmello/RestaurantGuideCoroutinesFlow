@@ -6,22 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.R
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.databinding.RestaurantDetailsFragmentBinding
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.RestaurantReview
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter.RestaurantDetailsReviewsAdapter
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.RestaurantReviewsViewModel
-import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.viewstate.RestaurantReviewsViewState
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.collectLatest
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.gone
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.handleNetworkError
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.extension.visible
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.AppNavigation
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.shared.navigation.arguments.RestaurantDetailsArg
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,6 +28,10 @@ class RestaurantDetailsFragment : Fragment() {
 
     @Inject
     lateinit var appNavigation: AppNavigation
+
+    private val listReviewsAdapter: RestaurantDetailsReviewsAdapter by lazy {
+        RestaurantDetailsReviewsAdapter()
+    }
 
     private val viewModel: RestaurantReviewsViewModel by viewModels()
 
@@ -52,24 +55,25 @@ class RestaurantDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initView()
+        initAdapter()
         initListeners()
         initCollectors()
     }
 
-    private fun initView() {
-        restaurantDetailsArg?.let {
-            val textRating = "${it.rating} - ${it.ratingDescription}"
+    private fun initView() = restaurantDetailsArg?.let {
+        val textRating = "${it.rating} - ${it.ratingDescription}"
 
-            binding.tvRestaurantDetailsTitle.text = it.name
-            binding.tvRestaurantDetailsRating.text = textRating
-            binding.tvRestaurantDetailsCuisines.text = it.cuisines
-            binding.tvRestaurantDetailsPhoneNumbers.text = it.phoneNumbers
-            binding.tvRestaurantDetailsAddress.text = it.address
+        binding.tvRestaurantDetailsTitle.text = it.name
+        binding.tvRestaurantDetailsRating.text = textRating
+        binding.tvRestaurantDetailsCuisines.text = it.cuisines
+        binding.tvRestaurantDetailsPhoneNumbers.text = it.phoneNumbers
+        binding.tvRestaurantDetailsAddress.text = it.address
 
-            handleRestarantImage(it.image)
+        handleRestarantImage(it.image)
+    } ?: appNavigation.onBackPressed(binding.root)
 
-            viewModel.getRestaurantReviews(it.id)
-        }
+    private fun initAdapter() {
+        binding.rvRestaurantDetailsReviews.adapter = listReviewsAdapter
     }
 
     private fun initListeners() {
@@ -78,31 +82,27 @@ class RestaurantDetailsFragment : Fragment() {
         }
     }
 
-    private fun initCollectors() {
-        collectLatest(viewModel.viewState) { it?.let { handleViewState(it) } }
-    }
-
-    private fun handleViewState(viewState: RestaurantReviewsViewState) = when(viewState) {
-        is RestaurantReviewsViewState.Loading -> {
-            showLoading()
-        }
-        is RestaurantReviewsViewState.Error -> {
-            hideLoading()
-            handleError(viewState.throwable)
-        }
-        is RestaurantReviewsViewState.ListRestaurantReview -> {
-            handleRestaurantReview(viewState.list)
+    private fun initCollectors() = restaurantDetailsArg?.let { args ->
+        collectLatest(viewModel.getPagingData(args.id)) { listReviewsAdapter.submitData(it) }
+        collectLatest(listReviewsAdapter.loadStateFlow.distinctUntilChangedBy { it.refresh }) { loadState ->
+            when (loadState.refresh) {
+                is LoadState.Loading -> {
+                    showLoading()
+                }
+                is LoadState.NotLoading -> {
+                    hideLoading()
+                }
+                is LoadState.Error -> {
+                    hideLoading()
+                    handleError((loadState.refresh as LoadState.Error).error)
+                }
+            }
         }
     }
 
     private fun showLoading() = binding.pbRestaurantDetails.visible()
 
     private fun hideLoading() = binding.pbRestaurantDetails.visible()
-
-    private fun handleRestaurantReview(restaurantReview: List<RestaurantReview>) {
-        binding.rvRestaurantDetailsReviews.adapter = RestaurantDetailsReviewsAdapter(restaurantReview)
-        binding.rvRestaurantDetailsReviews.layoutManager = LinearLayoutManager(context)
-    }
 
     private fun handleError(throwable: Throwable) {
         val message = throwable.handleNetworkError()

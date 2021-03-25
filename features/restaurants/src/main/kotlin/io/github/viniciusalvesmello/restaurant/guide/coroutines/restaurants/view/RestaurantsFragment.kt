@@ -15,6 +15,7 @@ import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.data
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.CategoryRestaurants
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.Restaurant
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.repository.model.mapper.toRestaurantDetailsArg
+import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter.RestaurantViewHolder
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.view.adapter.RestaurantsAdapter
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.RestaurantsViewModel
 import io.github.viniciusalvesmello.restaurant.guide.coroutines.restaurants.viewmodel.viewstate.RestaurantsViewState
@@ -28,13 +29,13 @@ import kotlinx.coroutines.flow.distinctUntilChangedBy
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RestaurantsFragment : Fragment() {
+class RestaurantsFragment : Fragment(), RestaurantViewHolder.Listener {
 
     @Inject
     lateinit var appNavigation: AppNavigation
 
     private val listAdapter: RestaurantsAdapter by lazy {
-        RestaurantsAdapter(::onClickItemRecycleView)
+        RestaurantsAdapter(this)
     }
 
     private val viewModel: RestaurantsViewModel by viewModels()
@@ -80,13 +81,15 @@ class RestaurantsFragment : Fragment() {
         }
 
         binding.cgRestaurantsCategories.setOnCheckedChangeListener { _, chipId ->
-            viewModel.request.categoryId = if (chipId < 0) {
-                chipAll.isChecked = true
-                chipAll.id
-            } else {
-                chipId
+            if(chipId < 0 || viewModel.request.categoryId != chipId) {
+                viewModel.request.categoryId = if (chipId < 0) {
+                    chipAll.isChecked = true
+                    chipAll.id
+                } else {
+                    chipId
+                }
+                listAdapter.refresh()
             }
-            listAdapter.refresh()
         }
     }
 
@@ -160,10 +163,10 @@ class RestaurantsFragment : Fragment() {
         return chip
     }
 
-    private fun onClickItemRecycleView(view: View, restaurant: Restaurant) {
+    override fun onCardClickListener(view: View, restaurant: Restaurant) {
         appNavigation.navigateFromRestaurantToRestaurantDetails(
-            view,
-            restaurant.toRestaurantDetailsArg()
+            view = view,
+            restaurantDetailsArg = restaurant.toRestaurantDetailsArg()
         )
     }
 

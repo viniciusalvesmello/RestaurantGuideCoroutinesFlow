@@ -13,8 +13,8 @@ class RestaurantsPageSource(
 ) : PagingSource<Int, Restaurant>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Restaurant> {
-        val page = params.key ?: STARTING_PAGE_INDEX
-        val start = page * STARTING_PAGE_INDEX
+        val page = params.key ?: INITIAL_PAGE
+        val start = (page * GET_RESTAURANTS_COUNT) - GET_RESTAURANTS_COUNT
 
         return try {
             val response = service.getRestaurants(
@@ -27,13 +27,14 @@ class RestaurantsPageSource(
                 start = start
             )
             val result = response.restaurants.map { it.restaurant.toRestaurant() }
-            val isFirstPage = response.results_start == STARTING_PAGE_INDEX
-            val isLastPage = result.isEmpty()
-            LoadResult.Page(
-                data = result,
-                prevKey = if (isFirstPage) null else response.results_start.dec(),
-                nextKey = if (isLastPage) null else response.results_start.inc(),
-            )
+            val prevKey = if (page == INITIAL_PAGE) null else page.dec()
+            val nextKey =
+                if ((response.results_start + response.results_shown) >= response.results_found.dec()) {
+                    null
+                } else {
+                    page.inc()
+                }
+            LoadResult.Page(data = result, prevKey = prevKey, nextKey = nextKey)
         } catch (exception: Exception) {
             LoadResult.Error(exception)
         }
@@ -46,7 +47,7 @@ class RestaurantsPageSource(
         }
 
     companion object {
-        private const val STARTING_PAGE_INDEX = 1
+        private const val INITIAL_PAGE = 1
         private const val GET_RESTAURANTS_ENTITY_TYPE = "city"
         private const val GET_RESTAURANTS_SORT = "rating"
         private const val GET_RESTAURANTS_ORDER = "desc"
