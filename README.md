@@ -4,9 +4,10 @@
 
  - Atualizar bibliotecas e arquivos Gradle;
  - Migrar o kotlin synthetic para o [ViewBinding](https://developer.android.com/topic/libraries/view-binding);
- - Utilizar o [viewModelScope](https://developer.android.com/topic/libraries/architecture/coroutines) em vez da classe AppCoroutines;
- - Migrar do Dagger 2 para o [Hilt](https://dagger.dev/hilt/);
- - Utilizar o [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview).
+ - Migrar a classe AppCoroutines para o [viewModelScope](https://developer.android.com/topic/libraries/architecture/coroutines);
+ - Migrar do Dagger 2 para o [Dagger Hilt](https://dagger.dev/hilt/);
+ - [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview);
+ - [StateFlow](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow).
 
 ## Versão 1.0.0
 
