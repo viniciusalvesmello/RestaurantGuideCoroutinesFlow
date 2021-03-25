@@ -1,2 +1,5 @@
-include ':app', ':cities', ':shared', ':restaurants'
-rootProject.name='RestaurantGuideCoroutinesFlow'
+include ':app'
+include ':core:cache'
+include ':core:shared'
+include ':features:cities'
+include ':features:restaurants'

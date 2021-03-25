@@ -2,10 +2,11 @@
 
 ## Versão 2.0.0
 
- - Atualizar bibliotecas e arquivos Gradle
- - Alterar o kotlin synthetic para o [ViewBinding](https://developer.android.com/topic/libraries/view-binding)
- - Change AppCoroutines to [viewModelScope](https://developer.android.com/topic/libraries/architecture/coroutines)
- - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
+ - Atualizar bibliotecas e arquivos Gradle;
+ - Migrar o kotlin synthetic para o [ViewBinding](https://developer.android.com/topic/libraries/view-binding);
+ - Utilizar o [viewModelScope](https://developer.android.com/topic/libraries/architecture/coroutines) em vez da classe AppCoroutines;
+ - Migrar do Dagger 2 para o [Hilt](https://dagger.dev/hilt/);
+ - Utilizar o [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview).
 
 ## Versão 1.0.0
 
