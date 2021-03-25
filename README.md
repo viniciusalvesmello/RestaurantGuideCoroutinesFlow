@@ -1,5 +1,16 @@
 # Restaurant Guide (MVVM + Coroutines Flow)
 
+## Versão 2.0.0
+
+ - Atualizar bibliotecas e arquivos Gradle;
+ - Migrar o kotlin synthetic para o [ViewBinding](https://developer.android.com/topic/libraries/view-binding);
+ - Migrar a classe AppCoroutines para o [viewModelScope](https://developer.android.com/topic/libraries/architecture/coroutines);
+ - Migrar do Dagger 2 para o [Dagger Hilt](https://dagger.dev/hilt/);
+ - [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview);
+ - [StateFlow](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow).
+
+## Versão 1.0.0
+
 Aqui na FreteBras sempre estamos buscando conhecimento para evoluir nossas tecnologias, bem como nossa stack de trabalho. Neste contexto, o intuito da tech talk foi mostrar como podemos evoluir do RxJava/Android para Kotlin Coroutines Flow, focando nas chamadas assíncronas realizadas pelo repository (Utilizado principalmente para acesso a nossa API e ao banco de dados local).
 
 Não precisamos falar como a linguagem de programação Kotlin influenciou todo o ecossistema do Android, então, já vamos deixar um agradecimento especial para a JetBrains. Cada vez mais estão surgindo bibliotecas desenvolvidas com Kotlin, que provam que podem performar melhor que bibliotecas desenvolvidas em Java, e, o Kotlin Coroutines Flow, não fica fora desta lista.
@@ -18,9 +29,3 @@ Não precisamos falar como a linguagem de programação Kotlin influenciou todo 
 - Dagger com Activity Builder;
 - Jetpack Navigation;
 - Unit Tests.
-
-### Próximos passos
-
-- Trocar o Picasso pelo Coil;
-- Utilizar livecycleScope, viewModelScope e a dsl do liveData para Coroutines;
-- Testes Instrumentais com Espresso e Robot Partner.
